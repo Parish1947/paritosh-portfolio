@@ -114,18 +114,25 @@ function initAnimations() {
         }
     );
 
-    // Simplified skills animation
+    // Enhanced skills animation with aesthetic effects
     gsap.fromTo('.skill-item', 
         { 
             opacity: 0,
-            scale: 0.8
+            scale: 0.6,
+            y: 30,
+            rotationX: 15
         },
         {
             opacity: 1,
             scale: 1,
-            duration: 0.4,
-            ease: 'power2.out',
-            stagger: 0.05,
+            y: 0,
+            rotationX: 0,
+            duration: 0.8,
+            ease: 'back.out(1.2)',
+            stagger: {
+                amount: 0.6,
+                from: 'random'
+            },
             scrollTrigger: {
                 trigger: '.skills-list',
                 start: 'top 85%',
@@ -133,6 +140,37 @@ function initAnimations() {
             }
         }
     );
+
+    // Add subtle floating animation to skills
+    gsap.utils.toArray('.skill-item').forEach((item, index) => {
+        gsap.to(item, {
+            y: -3,
+            duration: 2 + (index * 0.1),
+            ease: 'power2.inOut',
+            yoyo: true,
+            repeat: -1,
+            delay: index * 0.1
+        });
+
+        // Add hover micro-interactions
+        item.addEventListener('mouseenter', () => {
+            gsap.to(item, {
+                scale: 1.05,
+                rotation: Math.random() * 4 - 2, // Random rotation between -2 and 2 degrees
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+
+        item.addEventListener('mouseleave', () => {
+            gsap.to(item, {
+                scale: 1,
+                rotation: 0,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+    });
 
     // Simplified achievement cards animation
     gsap.fromTo('.achievement-card', 
