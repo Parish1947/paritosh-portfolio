@@ -1,5 +1,5 @@
 // Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 // Initialize animations when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -250,26 +250,6 @@ function initNavigation() {
         toggleClass: {className: 'scrolled', targets: navbar}
     });
 
-    // Active link highlighting
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                gsap.to(window, {
-                    duration: 1,
-                    scrollTo: {
-                        y: targetSection,
-                        offsetY: 80
-                    },
-                    ease: 'power3.inOut'
-                });
-            }
-        });
-    });
-
     // Update active link on scroll
     ScrollTrigger.batch('section', {
         onEnter: (elements) => {
@@ -288,20 +268,39 @@ function initNavigation() {
 
 // Smooth scrolling for all links
 function initSmoothScrolling() {
-    // Smooth scroll for anchor links
+    // Smooth scroll for all anchor links (navigation and buttons)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href');
+            const target = document.querySelector(targetId);
+            
+            console.log('Clicked link:', targetId, 'Target element:', target); // Debug log
+            
             if (target) {
-                gsap.to(window, {
-                    duration: 1,
-                    scrollTo: {
-                        y: target,
-                        offsetY: 80
-                    },
-                    ease: 'power3.inOut'
-                });
+                // Try GSAP ScrollTo first
+                try {
+                    gsap.to(window, {
+                        duration: 1.2,
+                        scrollTo: {
+                            y: target,
+                            offsetY: 80
+                        },
+                        ease: 'power3.inOut',
+                        onComplete: () => {
+                            console.log('Scroll completed to:', targetId);
+                        }
+                    });
+                } catch (error) {
+                    // Fallback to native smooth scroll
+                    console.log('Using fallback smooth scroll');
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            } else {
+                console.error('Target element not found for:', targetId);
             }
         });
     });
