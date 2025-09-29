@@ -362,26 +362,91 @@ document.querySelectorAll('.project-card, .achievement-card, .timeline-item').fo
     observer.observe(el);
 });
 
-// Add custom cursor
+// Enhanced custom cursor with aesthetic effects
 document.addEventListener('DOMContentLoaded', () => {
+    // Create main cursor
     const cursor = document.createElement('div');
-    cursor.className = 'cursor';
+    cursor.className = 'custom-cursor';
     cursor.style.cssText = `
         position: fixed;
         width: 20px;
         height: 20px;
-        background: rgba(0, 122, 255, 0.3);
+        background: rgba(255, 255, 255, 0.8);
         border-radius: 50%;
         pointer-events: none;
         z-index: 9999;
         mix-blend-mode: difference;
         transition: transform 0.1s ease;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     `;
     document.body.appendChild(cursor);
+
+    // Create cursor trail
+    const trail = document.createElement('div');
+    trail.className = 'cursor-trail';
+    trail.style.cssText = `
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transition: all 0.3s ease;
+    `;
+    document.body.appendChild(trail);
+
+    // Create glow effect
+    const glow = document.createElement('div');
+    glow.className = 'cursor-glow';
+    glow.style.cssText = `
+        position: fixed;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9997;
+        transition: all 0.5s ease;
+    `;
+    document.body.appendChild(glow);
+
+    // Mouse movement tracking
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+    let trailX = 0, trailY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    // Smooth cursor animation
+    function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.2;
+        cursorY += (mouseY - cursorY) * 0.2;
+        
+        trailX += (mouseX - trailX) * 0.1;
+        trailY += (mouseY - trailY) * 0.1;
+
+        cursor.style.left = cursorX - 10 + 'px';
+        cursor.style.top = cursorY - 10 + 'px';
+        
+        trail.style.left = trailX - 20 + 'px';
+        trail.style.top = trailY - 20 + 'px';
+        
+        glow.style.left = mouseX - 50 + 'px';
+        glow.style.top = mouseY - 50 + 'px';
+
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
 
     // Hide cursor on mobile
     if (window.innerWidth <= 768) {
         cursor.style.display = 'none';
+        trail.style.display = 'none';
+        glow.style.display = 'none';
     }
 });
 
