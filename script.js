@@ -10,29 +10,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Hero Section Animations
 function initAnimations() {
-    // Hero title animation
+    // Hero title animation - redesigned
     gsap.timeline()
-        .to('.title-line', {
+        .fromTo('.hero-name', {
+            opacity: 0,
+            y: 100,
+            scale: 0.8
+        }, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1.2,
+            ease: 'power3.out'
+        })
+        .fromTo('.hero-role', {
+            opacity: 0,
+            y: 50
+        }, {
             opacity: 1,
             y: 0,
             duration: 0.8,
-            stagger: 0.2,
             ease: 'power3.out'
-        })
-        .to('.hero-subtitle', {
+        }, '-=0.6')
+        .fromTo('.hero-description', {
+            opacity: 0,
+            y: 30
+        }, {
             opacity: 1,
             y: 0,
             duration: 0.8,
             ease: 'power3.out'
         }, '-=0.4')
-        .to('.hero-buttons', {
+        .fromTo('.hero-buttons', {
+            opacity: 0,
+            y: 30
+        }, {
             opacity: 1,
             y: 0,
             duration: 0.8,
             ease: 'power3.out'
         }, '-=0.4');
 
-    // Removed parallax effect for better performance
+    // Parallax effect for hero background
+    gsap.to('.hero-image', {
+        yPercent: -50,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.hero',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
+        }
+    });
 
     // Simplified section reveal animations for better performance
     gsap.utils.toArray('section').forEach((section, index) => {
@@ -141,22 +170,12 @@ function initAnimations() {
         }
     );
 
-    // Add subtle floating animation to skills
-    gsap.utils.toArray('.skill-item').forEach((item, index) => {
-        gsap.to(item, {
-            y: -3,
-            duration: 2 + (index * 0.1),
-            ease: 'power2.inOut',
-            yoyo: true,
-            repeat: -1,
-            delay: index * 0.1
-        });
-
-        // Add hover micro-interactions
+    // Removed floating animations for better performance
+    // Add subtle hover micro-interactions only
+    gsap.utils.toArray('.skill-item').forEach((item) => {
         item.addEventListener('mouseenter', () => {
             gsap.to(item, {
                 scale: 1.05,
-                rotation: Math.random() * 4 - 2, // Random rotation between -2 and 2 degrees
                 duration: 0.3,
                 ease: 'power2.out'
             });
@@ -165,7 +184,6 @@ function initAnimations() {
         item.addEventListener('mouseleave', () => {
             gsap.to(item, {
                 scale: 1,
-                rotation: 0,
                 duration: 0.3,
                 ease: 'power2.out'
             });
