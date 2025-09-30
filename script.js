@@ -442,6 +442,70 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animateCursor();
 
+    // Enhanced cursor effects for interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, .btn, .nav-link, .skill-item, .project-card, .achievement-card, .contact-item');
+    
+    interactiveElements.forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(1.5)';
+            cursor.style.background = 'rgba(255, 255, 255, 0.9)';
+            cursor.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.8)';
+            trail.style.transform = 'scale(1.2)';
+            trail.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%)';
+            glow.style.transform = 'scale(1.3)';
+            glow.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%)';
+        });
+
+        element.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'scale(1)';
+            cursor.style.background = 'rgba(255, 255, 255, 0.8)';
+            cursor.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.5)';
+            trail.style.transform = 'scale(1)';
+            trail.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%)';
+            glow.style.transform = 'scale(1)';
+            glow.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%)';
+        });
+    });
+
+    // Special cursor effects for different element types
+    const buttons = document.querySelectorAll('.btn, button');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', () => {
+            cursor.style.borderRadius = '4px';
+            cursor.style.transform = 'scale(1.2) rotate(45deg)';
+        });
+        button.addEventListener('mouseleave', () => {
+            cursor.style.borderRadius = '50%';
+            cursor.style.transform = 'scale(1) rotate(0deg)';
+        });
+    });
+
+    const links = document.querySelectorAll('a, .nav-link');
+    links.forEach(link => {
+        link.addEventListener('mouseenter', () => {
+            cursor.style.borderRadius = '2px';
+            cursor.style.transform = 'scale(1.3)';
+        });
+        link.addEventListener('mouseleave', () => {
+            cursor.style.borderRadius = '50%';
+            cursor.style.transform = 'scale(1)';
+        });
+    });
+
+    const cards = document.querySelectorAll('.project-card, .achievement-card, .timeline-content');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(2)';
+            cursor.style.background = 'rgba(255, 255, 255, 0.3)';
+            cursor.style.boxShadow = '0 0 40px rgba(255, 255, 255, 0.6)';
+        });
+        card.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'scale(1)';
+            cursor.style.background = 'rgba(255, 255, 255, 0.8)';
+            cursor.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.5)';
+        });
+    });
+
     // Hide cursor on mobile
     if (window.innerWidth <= 768) {
         cursor.style.display = 'none';
