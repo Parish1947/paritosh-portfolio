@@ -260,6 +260,35 @@ function initAnimations() {
 function initNavigation() {
     const navbar = document.querySelector('.navbar');
     const navLinks = document.querySelectorAll('.nav-link');
+    const hamburgerMenu = document.querySelector('.hamburger-menu');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    // Mobile hamburger menu toggle
+    if (hamburgerMenu && navMenu) {
+        hamburgerMenu.addEventListener('click', () => {
+            hamburgerMenu.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
+        });
+
+        // Close menu when clicking on nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburgerMenu.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navbar.contains(e.target) && navMenu.classList.contains('active')) {
+                hamburgerMenu.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    }
     
     // Navbar background on scroll
     ScrollTrigger.create({
@@ -506,11 +535,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Hide cursor on mobile
+    // Hide cursor on mobile and add touch interactions
     if (window.innerWidth <= 768) {
         cursor.style.display = 'none';
         trail.style.display = 'none';
         glow.style.display = 'none';
+        
+        // Add mobile touch interactions
+        const touchElements = document.querySelectorAll('.project-card, .achievement-card, .timeline-content, .contact-item, .skill-item');
+        
+        touchElements.forEach(element => {
+            element.addEventListener('touchstart', () => {
+                element.style.transform = 'scale(0.98)';
+                element.style.transition = 'transform 0.1s ease';
+            });
+            
+            element.addEventListener('touchend', () => {
+                element.style.transform = 'scale(1)';
+                element.style.transition = 'transform 0.3s ease';
+            });
+        });
     }
 });
 
