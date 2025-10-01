@@ -1,8 +1,54 @@
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
+// Theme Toggle Functionality
+function initThemeToggle() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const sunIcon = document.querySelector('.sun-icon');
+    const moonIcon = document.querySelector('.moon-icon');
+    
+    // Get saved theme or default to dark
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Set initial icon state
+    if (savedTheme === 'light') {
+        sunIcon.classList.add('active');
+        moonIcon.classList.remove('active');
+    } else {
+        moonIcon.classList.add('active');
+        sunIcon.classList.remove('active');
+    }
+    
+    // Theme toggle event listener
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        // Update theme
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Update icons with animation
+        if (newTheme === 'light') {
+            sunIcon.classList.add('active');
+            moonIcon.classList.remove('active');
+        } else {
+            moonIcon.classList.add('active');
+            sunIcon.classList.remove('active');
+        }
+        
+        // Add click animation
+        themeToggle.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            themeToggle.style.transform = 'scale(1)';
+        }, 150);
+    });
+}
+
 // Initialize animations when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    initThemeToggle();
     initAnimations();
     initNavigation();
     initSmoothScrolling();
@@ -265,6 +311,13 @@ function initNavigation() {
     
     // Mobile hamburger menu toggle
     if (hamburgerMenu && navMenu) {
+        // Ensure hamburger menu is visible on mobile
+        if (window.innerWidth <= 768) {
+            hamburgerMenu.style.display = 'flex';
+            hamburgerMenu.style.visibility = 'visible';
+            hamburgerMenu.style.opacity = '1';
+        }
+        
         hamburgerMenu.addEventListener('click', () => {
             hamburgerMenu.classList.toggle('active');
             navMenu.classList.toggle('active');
