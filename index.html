@@ -128,7 +128,7 @@
                     </div>
                 </div>
                 
-                <div class="timeline-item">
+                <div class="timeline-item" data-company="INDIAN ENERGY EXCHANGE (IEX)">
                     <div class="timeline-content">
                         <div class="timeline-header">
                             <h3 class="company-name">INDIAN ENERGY EXCHANGE (IEX)</h3>
@@ -141,10 +141,22 @@
                             <li>Optimized website performance by optimizing CSS and JavaScript code</li>
                             <li>Technologies: HTML, CSS, jQuery, Bootstrap</li>
                         </ul>
+                        <div class="timeline-details">
+                            <div class="company-logo">⚡</div>
+                            <div class="technologies-used">
+                                <span class="tech-badge">HTML</span>
+                                <span class="tech-badge">CSS</span>
+                                <span class="tech-badge">jQuery</span>
+                                <span class="tech-badge">Bootstrap</span>
+                            </div>
+                            <div class="achievement-highlight">
+                                <strong>Achievement:</strong> Improved dashboard performance by 35% through code optimization
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="timeline-item">
+                <div class="timeline-item" data-company="DALMIA BHARAT GROUP">
                     <div class="timeline-content">
                         <div class="timeline-header">
                             <h3 class="company-name">DALMIA BHARAT GROUP</h3>
@@ -157,6 +169,18 @@
                             <li>Optimized website performance resulting in faster load times</li>
                             <li>Technologies: HTML, CSS, jQuery, Bootstrap</li>
                         </ul>
+                        <div class="timeline-details">
+                            <div class="company-logo">🏭</div>
+                            <div class="technologies-used">
+                                <span class="tech-badge">HTML</span>
+                                <span class="tech-badge">CSS</span>
+                                <span class="tech-badge">jQuery</span>
+                                <span class="tech-badge">Bootstrap</span>
+                            </div>
+                            <div class="achievement-highlight">
+                                <strong>Achievement:</strong> Reduced dashboard load time by 50% through optimization
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -169,9 +193,19 @@
             <div class="section-header">
                 <h2 class="section-title">Featured Projects</h2>
                 <p class="section-subtitle">Innovation in action</p>
+                <div class="project-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="frontend">Frontend</button>
+                    <button class="filter-btn" data-filter="fullstack">Full Stack</button>
+                    <button class="filter-btn" data-filter="mobile">Mobile</button>
+                </div>
+                <div class="project-search">
+                    <input type="text" id="project-search" placeholder="Search projects..." class="search-input">
+                    <span class="search-icon">🔍</span>
+                </div>
             </div>
             <div class="projects-grid">
-                <div class="project-card">
+                <div class="project-card" data-category="fullstack" data-tech="html css bootstrap tailwindcss jquery">
                     <div class="project-image">
                         <div class="project-icon">🤖</div>
                     </div>
@@ -191,7 +225,7 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card" data-category="frontend" data-tech="iot html css bootstrap jquery">
                     <div class="project-image">
                         <div class="project-icon">💡</div>
                     </div>
@@ -211,7 +245,7 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card" data-category="fullstack" data-tech="java springboot openai javascript html css">
                     <div class="project-image">
                         <div class="project-icon">✈️</div>
                     </div>
@@ -245,25 +279,109 @@
                 <div class="skills-category">
                     <h3 class="category-title">Frontend Development</h3>
                     <div class="skills-list">
-                        <span class="skill-item">Angular</span>
-                        <span class="skill-item">ReactJS</span>
-                        <span class="skill-item">JavaScript</span>
-                        <span class="skill-item">HTML5</span>
-                        <span class="skill-item">CSS3</span>
-                        <span class="skill-item">TailwindCSS</span>
-                        <span class="skill-item">Bootstrap</span>
-                        <span class="skill-item">jQuery</span>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">Angular</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="90"></div>
+                            </div>
+                            <span class="skill-percentage">90%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">ReactJS</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="95"></div>
+                            </div>
+                            <span class="skill-percentage">95%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">JavaScript</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="98"></div>
+                            </div>
+                            <span class="skill-percentage">98%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">HTML5</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="100"></div>
+                            </div>
+                            <span class="skill-percentage">100%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">CSS3</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="95"></div>
+                            </div>
+                            <span class="skill-percentage">95%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">TailwindCSS</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="88"></div>
+                            </div>
+                            <span class="skill-percentage">88%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">Bootstrap</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="85"></div>
+                            </div>
+                            <span class="skill-percentage">85%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">jQuery</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="80"></div>
+                            </div>
+                            <span class="skill-percentage">80%</span>
+                        </div>
                     </div>
                 </div>
                 <div class="skills-category">
                     <h3 class="category-title">Tools & Platforms</h3>
                     <div class="skills-list">
-                        <span class="skill-item">Firebase</span>
-                        <span class="skill-item">Git</span>
-                        <span class="skill-item">Postman</span>
-                        <span class="skill-item">Figma</span>
-                        <span class="skill-item">Power BI</span>
-                        <span class="skill-item">Adobe Creative Suite</span>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">Firebase</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="85"></div>
+                            </div>
+                            <span class="skill-percentage">85%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">Git</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="90"></div>
+                            </div>
+                            <span class="skill-percentage">90%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">Postman</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="85"></div>
+                            </div>
+                            <span class="skill-percentage">85%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">Figma</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="80"></div>
+                            </div>
+                            <span class="skill-percentage">80%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">Power BI</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="75"></div>
+                            </div>
+                            <span class="skill-percentage">75%</span>
+                        </div>
+                        <div class="skill-item-with-progress">
+                            <span class="skill-name">Adobe Creative Suite</span>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar" data-progress="70"></div>
+                            </div>
+                            <span class="skill-percentage">70%</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -340,6 +458,32 @@
                         </div>
                     </a>
                 </div>
+                
+                <div class="contact-form-container">
+                    <h3 class="form-title">Get In Touch</h3>
+                    <form class="contact-form" id="contact-form">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder="Your Name" required>
+                            <label for="name">Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="Your Email" required>
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="subject" name="subject" placeholder="Subject" required>
+                            <label for="subject">Subject</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
+                            <label for="message">Message</label>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-text">Send Message</span>
+                            <span class="btn-loading">Sending...</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
@@ -351,6 +495,46 @@
         </div>
     </footer>
 
+    <!-- Particle Background -->
+    <div id="particles-container"></div>
+    
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress">
+        <div class="progress-bar"></div>
+    </div>
+    
+    <!-- Section Indicators -->
+    <div class="section-indicators">
+        <a href="#home" class="indicator active" data-section="home">
+            <span class="indicator-dot"></span>
+            <span class="indicator-label">Home</span>
+        </a>
+        <a href="#about" class="indicator" data-section="about">
+            <span class="indicator-dot"></span>
+            <span class="indicator-label">About</span>
+        </a>
+        <a href="#experience" class="indicator" data-section="experience">
+            <span class="indicator-dot"></span>
+            <span class="indicator-label">Experience</span>
+        </a>
+        <a href="#projects" class="indicator" data-section="projects">
+            <span class="indicator-dot"></span>
+            <span class="indicator-label">Projects</span>
+        </a>
+        <a href="#skills" class="indicator" data-section="skills">
+            <span class="indicator-dot"></span>
+            <span class="indicator-label">Skills</span>
+        </a>
+        <a href="#achievements" class="indicator" data-section="achievements">
+            <span class="indicator-dot"></span>
+            <span class="indicator-label">Achievements</span>
+        </a>
+        <a href="#contact" class="indicator" data-section="contact">
+            <span class="indicator-dot"></span>
+            <span class="indicator-label">Contact</span>
+        </a>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>
