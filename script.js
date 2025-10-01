@@ -48,41 +48,50 @@ function initThemeToggle() {
 
 // Skills Progress Bars Animation
 function initSkillsProgressBars() {
-    const progressBars = document.querySelectorAll('.skill-progress-bar');
-    
+    const skillCards = document.querySelectorAll('.skill-card');
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const progressBar = entry.target;
-                const progress = progressBar.getAttribute('data-progress');
+                const skillCard = entry.target;
+                const skillFill = skillCard.querySelector('.skill-fill');
+                const skillPercent = skillCard.querySelector('.skill-percent');
+                const progress = skillFill.getAttribute('data-width');
                 
-                // Animate progress bar
-                gsap.to(progressBar, {
-                    width: progress + '%',
-                    duration: 1.5,
-                    ease: 'power2.out',
-                    delay: 0.2
+                // Animate the progress bar
+                gsap.to(skillFill, { 
+                    width: progress + '%', 
+                    duration: 1.5, 
+                    ease: 'power2.out', 
+                    delay: 0.2 
                 });
                 
-                // Animate percentage text
-                const percentageElement = progressBar.closest('.skill-item-with-progress').querySelector('.skill-percentage');
-                gsap.fromTo(percentageElement, 
-                    { textContent: '0%' },
+                // Animate the percentage counter
+                gsap.fromTo(skillPercent, 
+                    { textContent: '0%' }, 
                     { 
-                        textContent: progress + '%',
-                        duration: 1.5,
-                        ease: 'power2.out',
-                        delay: 0.2,
-                        snap: { textContent: 1 }
+                        textContent: progress + '%', 
+                        duration: 1.5, 
+                        ease: 'power2.out', 
+                        delay: 0.2, 
+                        snap: { textContent: 1 } 
                     }
                 );
                 
-                observer.unobserve(progressBar);
+                // Add hover effect
+                skillCard.addEventListener('mouseenter', () => {
+                    gsap.to(skillCard, { scale: 1.02, duration: 0.3, ease: 'power2.out' });
+                });
+                
+                skillCard.addEventListener('mouseleave', () => {
+                    gsap.to(skillCard, { scale: 1, duration: 0.3, ease: 'power2.out' });
+                });
+                
+                observer.unobserve(skillCard);
             }
         });
     }, { threshold: 0.5 });
     
-    progressBars.forEach(bar => observer.observe(bar));
+    skillCards.forEach(card => observer.observe(card));
 }
 
 // Project Filter & Search System
@@ -446,6 +455,92 @@ function initSoundEffects() {
     }
 }
 
+// Custom Cursor Effects - Artistic
+function initCustomCursor() {
+    if (window.innerWidth <= 768) return; // Disable on mobile
+    
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    document.body.appendChild(cursor);
+    
+    const trail = document.createElement('div');
+    trail.className = 'cursor-trail';
+    document.body.appendChild(trail);
+    
+    const glow = document.createElement('div');
+    glow.className = 'cursor-glow';
+    document.body.appendChild(glow);
+    
+    let mouseX = 0, mouseY = 0;
+    let trailX = 0, trailY = 0;
+    let glowX = 0, glowY = 0;
+    
+    // Smooth animation loop
+    function animateCursor() {
+        // Trail follows cursor with delay
+        trailX += (mouseX - trailX) * 0.15;
+        trailY += (mouseY - trailY) * 0.15;
+        trail.style.left = trailX - 4 + 'px';
+        trail.style.top = trailY - 4 + 'px';
+        
+        // Glow follows with more delay
+        glowX += (mouseX - glowX) * 0.05;
+        glowY += (mouseY - glowY) * 0.05;
+        glow.style.left = glowX - 20 + 'px';
+        glow.style.top = glowY - 20 + 'px';
+        
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        cursor.style.left = mouseX - 10 + 'px';
+        cursor.style.top = mouseY - 10 + 'px';
+    });
+    
+    // Interactive elements with artistic effects
+    const interactiveElements = document.querySelectorAll('a, button, .btn, .project-card, .skill-card, .contact-item');
+    interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(2) rotate(45deg)';
+            cursor.style.background = 'radial-gradient(circle, rgba(118, 75, 162, 0.9) 0%, rgba(102, 126, 234, 0.7) 100%)';
+            cursor.style.boxShadow = '0 0 30px rgba(118, 75, 162, 0.8)';
+            
+            glow.style.transform = 'scale(1.5)';
+            glow.style.background = 'radial-gradient(circle, rgba(118, 75, 162, 0.2) 0%, transparent 70%)';
+        });
+        
+        el.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'scale(1) rotate(0deg)';
+            cursor.style.background = 'radial-gradient(circle, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.6) 100%)';
+            cursor.style.boxShadow = '0 0 20px rgba(102, 126, 234, 0.5)';
+            
+            glow.style.transform = 'scale(1)';
+            glow.style.background = 'radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%)';
+        });
+    });
+    
+    // Special effects for different element types
+    const projectCards = document.querySelectorAll('.project-card');
+    projectCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(2.5) rotate(90deg)';
+            cursor.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(102, 126, 234, 0.8) 100%)';
+        });
+    });
+    
+    const skillCards = document.querySelectorAll('.skill-card');
+    skillCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(1.8) rotate(-45deg)';
+            cursor.style.background = 'radial-gradient(circle, rgba(118, 75, 162, 0.9) 0%, rgba(102, 126, 234, 0.7) 100%)';
+        });
+    });
+}
+
 // Initialize animations when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initThemeToggle();
@@ -461,6 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollProgress();
     initSectionIndicators();
     initSoundEffects();
+    initCustomCursor();
 });
 
 // Hero Section Animations
