@@ -1,24 +1,21 @@
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-// Initialize game IMMEDIATELY when script loads (before DOMContentLoaded)
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initGameFirst);
-} else {
-    // DOM already loaded
-    initGameFirst();
-}
-
-function initGameFirst() {
-    console.log('Initializing game FIRST');
-    // Small delay to ensure DOM is fully ready
+// Simple initialization on window load
+window.addEventListener('load', () => {
+    console.log('Window loaded - initializing everything');
+    
+    // Clear session storage if URL has resetgame parameter
+    if (window.location.search.includes('resetgame')) {
+        sessionStorage.removeItem('gameCompleted');
+        console.log('Session storage cleared');
+    }
+    
+    // Initialize game first
     setTimeout(() => {
-        // Initialize custom cursor first so it exists
-        initCustomCursor();
-        // Then initialize game
         initTargetShootingGame();
-    }, 100);
-}
+    }, 200);
+});
 
 // Target Shooting Game
 function initTargetShootingGame() {
@@ -65,24 +62,6 @@ function initTargetShootingGame() {
     gameOverlay.style.visibility = 'visible';
     gameOverlay.style.opacity = '1';
     gameOverlay.classList.remove('hidden');
-    
-    // Hide custom cursor elements during game
-    const customCursor = document.querySelector('.custom-cursor');
-    const cursorTrail = document.querySelector('.cursor-trail');
-    const cursorGlow = document.querySelector('.cursor-glow');
-    
-    if (customCursor) {
-        customCursor.style.display = 'none';
-        console.log('Custom cursor hidden');
-    }
-    if (cursorTrail) {
-        cursorTrail.style.display = 'none';
-        console.log('Cursor trail hidden');
-    }
-    if (cursorGlow) {
-        cursorGlow.style.display = 'none';
-        console.log('Cursor glow hidden');
-    }
     
     console.log('Game overlay should now be visible');
     
@@ -200,28 +179,9 @@ function initTargetShootingGame() {
     // End game and show portfolio
     function endGame() {
         gameOverlay.classList.add('hidden');
-        
-        // Restore custom cursor elements
-        const customCursor = document.querySelector('.custom-cursor');
-        const cursorTrail = document.querySelector('.cursor-trail');
-        const cursorGlow = document.querySelector('.cursor-glow');
-        
         setTimeout(() => {
             gameOverlay.style.display = 'none';
-            
-            // Show cursor elements again
-            if (customCursor) {
-                customCursor.style.display = 'block';
-                console.log('Custom cursor restored');
-            }
-            if (cursorTrail) {
-                cursorTrail.style.display = 'block';
-                console.log('Cursor trail restored');
-            }
-            if (cursorGlow) {
-                cursorGlow.style.display = 'block';
-                console.log('Cursor glow restored');
-            }
+            console.log('Game ended, portfolio visible');
         }, 500);
     }
     
@@ -236,12 +196,6 @@ function initTargetShootingGame() {
     
     // Start the game
     startGame();
-}
-
-// For testing: Clear session storage if you add ?resetgame to URL
-if (window.location.search.includes('resetgame')) {
-    sessionStorage.removeItem('gameCompleted');
-    console.log('Session storage cleared');
 }
 
 // Theme Toggle Functionality
@@ -702,6 +656,11 @@ function initSoundEffects() {
 function initCustomCursor() {
     if (window.innerWidth <= 768) return; // Disable on mobile
     
+    console.log('Initializing custom cursor');
+    
+    // Add class to hide default cursor
+    document.body.classList.add('custom-cursor-active');
+    
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
     document.body.appendChild(cursor);
@@ -799,7 +758,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollProgress();
     initSectionIndicators();
     initSoundEffects();
-    // initCustomCursor(); // Already initialized with game
+    initCustomCursor();
 });
 
 // Hero Section Animations

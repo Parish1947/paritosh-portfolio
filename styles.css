@@ -293,12 +293,15 @@ body {
     color: var(--text-primary);
     background: var(--bg-primary);
     overflow-x: hidden;
-    cursor: none; /* Hide default cursor */
     transition: all 0.3s ease;
 }
 
-/* Hide default cursor on all interactive elements */
-* {
+/* Custom cursor will be added by JavaScript */
+body.custom-cursor-active {
+    cursor: none;
+}
+
+body.custom-cursor-active * {
     cursor: none !important;
 }
 
