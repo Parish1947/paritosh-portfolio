@@ -193,19 +193,33 @@ function initTargetShootingGame() {
             }
             
             // Make sure cursor elements exist and are visible
-            const cursor = document.querySelector('.custom-cursor');
-            const trail = document.querySelector('.cursor-trail');
-            const glow = document.querySelector('.cursor-glow');
+            let cursor = document.querySelector('.custom-cursor');
+            let trail = document.querySelector('.cursor-trail');
+            let glow = document.querySelector('.cursor-glow');
             
-            if (cursor) {
-                cursor.style.display = 'block';
-                console.log('Custom cursor element shown');
-            } else {
-                console.log('Custom cursor element not found, initializing...');
+            if (!cursor || !trail || !glow) {
+                console.log('Custom cursor elements not found, initializing...');
                 initCustomCursor();
+                
+                // Get elements again after initialization
+                setTimeout(() => {
+                    cursor = document.querySelector('.custom-cursor');
+                    trail = document.querySelector('.cursor-trail');
+                    glow = document.querySelector('.cursor-glow');
+                    
+                    if (cursor) {
+                        cursor.style.display = 'block';
+                        console.log('Custom cursor element shown after init');
+                    }
+                    if (trail) trail.style.display = 'block';
+                    if (glow) glow.style.display = 'block';
+                }, 100);
+            } else {
+                cursor.style.display = 'block';
+                trail.style.display = 'block';
+                glow.style.display = 'block';
+                console.log('Custom cursor elements shown');
             }
-            if (trail) trail.style.display = 'block';
-            if (glow) glow.style.display = 'block';
         }, 500);
     }
     
@@ -678,7 +692,16 @@ function initSoundEffects() {
 
 // Custom Cursor Effects - Artistic
 function initCustomCursor() {
-    if (window.innerWidth <= 768) return; // Disable on mobile
+    if (window.innerWidth <= 768) {
+        console.log('Mobile device detected, skipping custom cursor');
+        return; // Disable on mobile
+    }
+    
+    // Check if cursor already exists
+    if (document.querySelector('.custom-cursor')) {
+        console.log('Custom cursor already exists, skipping initialization');
+        return;
+    }
     
     console.log('Initializing custom cursor');
     
@@ -696,6 +719,8 @@ function initCustomCursor() {
     const glow = document.createElement('div');
     glow.className = 'cursor-glow';
     document.body.appendChild(glow);
+    
+    console.log('Custom cursor elements created');
     
     let mouseX = 0, mouseY = 0;
     let trailX = 0, trailY = 0;
