@@ -9,6 +9,12 @@ function initTargetShootingGame() {
     const timerElement = document.getElementById('timer');
     const skipBtn = document.getElementById('skip-game');
     
+    // Check if elements exist
+    if (!gameOverlay || !gameArea || !scoreElement || !timerElement || !skipBtn) {
+        console.error('Game elements not found');
+        return;
+    }
+    
     let score = 0;
     let timeLeft = 15;
     let gameActive = true;
@@ -21,6 +27,19 @@ function initTargetShootingGame() {
         endGame();
         return;
     }
+    
+    // Show game overlay
+    gameOverlay.style.display = 'flex';
+    gameOverlay.classList.remove('hidden');
+    
+    // Hide custom cursor elements
+    const customCursor = document.querySelector('.custom-cursor');
+    const cursorTrails = document.querySelectorAll('.cursor-trail');
+    const cursorGlow = document.querySelector('.cursor-glow');
+    
+    if (customCursor) customCursor.style.display = 'none';
+    if (cursorGlow) cursorGlow.style.display = 'none';
+    cursorTrails.forEach(trail => trail.style.display = 'none');
     
     // Start the game
     function startGame() {
@@ -136,8 +155,17 @@ function initTargetShootingGame() {
     // End game and show portfolio
     function endGame() {
         gameOverlay.classList.add('hidden');
+        
+        // Restore custom cursor elements
+        const customCursor = document.querySelector('.custom-cursor');
+        const cursorTrails = document.querySelectorAll('.cursor-trail');
+        const cursorGlow = document.querySelector('.cursor-glow');
+        
         setTimeout(() => {
             gameOverlay.style.display = 'none';
+            if (customCursor) customCursor.style.display = 'block';
+            if (cursorGlow) cursorGlow.style.display = 'block';
+            cursorTrails.forEach(trail => trail.style.display = 'block');
         }, 500);
     }
     
