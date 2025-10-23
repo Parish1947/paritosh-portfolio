@@ -13,6 +13,9 @@ function initGameFirst() {
     console.log('Initializing game FIRST');
     // Small delay to ensure DOM is fully ready
     setTimeout(() => {
+        // Initialize custom cursor first so it exists
+        initCustomCursor();
+        // Then initialize game
         initTargetShootingGame();
     }, 100);
 }
@@ -63,14 +66,23 @@ function initTargetShootingGame() {
     gameOverlay.style.opacity = '1';
     gameOverlay.classList.remove('hidden');
     
-    // Hide custom cursor elements
+    // Hide custom cursor elements during game
     const customCursor = document.querySelector('.custom-cursor');
-    const cursorTrails = document.querySelectorAll('.cursor-trail');
+    const cursorTrail = document.querySelector('.cursor-trail');
     const cursorGlow = document.querySelector('.cursor-glow');
     
-    if (customCursor) customCursor.style.display = 'none';
-    if (cursorGlow) cursorGlow.style.display = 'none';
-    cursorTrails.forEach(trail => trail.style.display = 'none');
+    if (customCursor) {
+        customCursor.style.display = 'none';
+        console.log('Custom cursor hidden');
+    }
+    if (cursorTrail) {
+        cursorTrail.style.display = 'none';
+        console.log('Cursor trail hidden');
+    }
+    if (cursorGlow) {
+        cursorGlow.style.display = 'none';
+        console.log('Cursor glow hidden');
+    }
     
     console.log('Game overlay should now be visible');
     
@@ -191,14 +203,25 @@ function initTargetShootingGame() {
         
         // Restore custom cursor elements
         const customCursor = document.querySelector('.custom-cursor');
-        const cursorTrails = document.querySelectorAll('.cursor-trail');
+        const cursorTrail = document.querySelector('.cursor-trail');
         const cursorGlow = document.querySelector('.cursor-glow');
         
         setTimeout(() => {
             gameOverlay.style.display = 'none';
-            if (customCursor) customCursor.style.display = 'block';
-            if (cursorGlow) cursorGlow.style.display = 'block';
-            cursorTrails.forEach(trail => trail.style.display = 'block');
+            
+            // Show cursor elements again
+            if (customCursor) {
+                customCursor.style.display = 'block';
+                console.log('Custom cursor restored');
+            }
+            if (cursorTrail) {
+                cursorTrail.style.display = 'block';
+                console.log('Cursor trail restored');
+            }
+            if (cursorGlow) {
+                cursorGlow.style.display = 'block';
+                console.log('Cursor glow restored');
+            }
         }, 500);
     }
     
@@ -776,7 +799,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollProgress();
     initSectionIndicators();
     initSoundEffects();
-    initCustomCursor();
+    // initCustomCursor(); // Already initialized with game
 });
 
 // Hero Section Animations
