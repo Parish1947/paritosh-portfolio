@@ -116,16 +116,23 @@
 .game-overlay *,
 .game-container,
 .game-container * {
-    cursor: auto !important;
+    cursor: default !important;
 }
 
 .game-overlay .skip-btn {
     cursor: pointer !important;
 }
 
-.game-area,
+.game-area {
+    cursor: crosshair !important;
+}
+
 .game-area * {
     cursor: crosshair !important;
+}
+
+.game-area .target {
+    cursor: pointer !important;
 }
 
 .target {

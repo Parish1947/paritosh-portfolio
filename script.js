@@ -55,6 +55,10 @@ function initTargetShootingGame() {
     
     console.log('Showing game overlay...');
     
+    // Temporarily remove custom cursor during game
+    document.body.classList.remove('custom-cursor-active');
+    console.log('Custom cursor class removed for game');
+    
     // Force show game overlay
     gameOverlay.style.display = 'flex';
     gameOverlay.style.visibility = 'visible';
@@ -180,6 +184,28 @@ function initTargetShootingGame() {
         setTimeout(() => {
             gameOverlay.style.display = 'none';
             console.log('Game ended, portfolio visible');
+            
+            // Ensure custom cursor is visible after game
+            const body = document.body;
+            if (!body.classList.contains('custom-cursor-active')) {
+                body.classList.add('custom-cursor-active');
+                console.log('Custom cursor class added');
+            }
+            
+            // Make sure cursor elements exist and are visible
+            const cursor = document.querySelector('.custom-cursor');
+            const trail = document.querySelector('.cursor-trail');
+            const glow = document.querySelector('.cursor-glow');
+            
+            if (cursor) {
+                cursor.style.display = 'block';
+                console.log('Custom cursor element shown');
+            } else {
+                console.log('Custom cursor element not found, initializing...');
+                initCustomCursor();
+            }
+            if (trail) trail.style.display = 'block';
+            if (glow) glow.style.display = 'block';
         }, 500);
     }
     
