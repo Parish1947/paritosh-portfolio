@@ -156,6 +156,19 @@
     caret-color: #4ec9b0;
 }
 
+.terminal-input::placeholder {
+    color: #666;
+    opacity: 0;
+}
+
+/* Show placeholder only on mobile */
+@media (max-width: 768px) {
+    .terminal-input::placeholder {
+        opacity: 1;
+        font-size: 14px;
+    }
+}
+
 .terminal-cursor {
     width: 8px;
     height: 20px;
@@ -229,48 +242,152 @@
     100% { transform: scale(2); opacity: 0; }
 }
 
-/* Mobile Terminal Styles */
+/* Mobile Terminal Styles - Optimized for touch */
 @media (max-width: 768px) {
+    .game-overlay {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 60px; /* Space from top for better visibility */
+    }
+    
     .terminal-container {
         width: 95%;
         max-width: 100%;
+        max-height: 80vh; /* Prevent overflow on small screens */
+        overflow-y: auto;
+    }
+    
+    .terminal-header {
+        padding: 10px 12px;
+    }
+    
+    .terminal-title {
+        font-size: 11px;
     }
     
     .terminal-body {
         padding: 15px;
-        min-height: 250px;
+        min-height: auto; /* Let content determine height */
+        max-height: 60vh;
+        overflow-y: auto;
     }
     
     .terminal-line {
         font-size: 13px;
+        line-height: 1.5;
+        margin: 6px 0;
     }
     
     .terminal-challenge {
-        font-size: 16px;
+        font-size: 15px;
         letter-spacing: 1px;
+        padding: 12px 0;
+    }
+    
+    .terminal-input-line {
+        gap: 8px;
+        margin-top: 15px;
+    }
+    
+    .terminal-prompt {
+        font-size: 14px;
     }
     
     .terminal-input {
-        font-size: 14px;
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 8px 0;
+        min-height: 40px; /* Better touch target */
+    }
+    
+    .terminal-hint {
+        font-size: 12px;
+        margin-top: 12px;
+    }
+    
+    .terminal-footer {
+        padding: 10px 12px;
+    }
+    
+    .terminal-skip {
+        padding: 10px 18px;
+        font-size: 11px;
+        min-height: 44px; /* iOS touch target */
     }
 }
 
 @media (max-width: 480px) {
+    .game-overlay {
+        padding: 5px;
+        padding-top: 40px;
+    }
+    
     .terminal-container {
         width: 98%;
         border-radius: 8px;
+        max-height: 85vh;
+    }
+    
+    .terminal-header {
+        padding: 8px 10px;
+    }
+    
+    .terminal-buttons {
+        gap: 6px;
+    }
+    
+    .terminal-btn {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .terminal-title {
+        font-size: 10px;
     }
     
     .terminal-body {
         padding: 12px;
+        max-height: 55vh;
     }
     
     .terminal-line {
         font-size: 12px;
+        line-height: 1.4;
+        margin: 5px 0;
     }
     
     .terminal-challenge {
-        font-size: 14px;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+        padding: 10px 0;
+    }
+    
+    .terminal-input-line {
+        gap: 6px;
+        margin-top: 12px;
+    }
+    
+    .terminal-prompt {
+        font-size: 13px;
+    }
+    
+    .terminal-input {
+        font-size: 16px; /* Prevents zoom */
+        padding: 6px 0;
+    }
+    
+    .terminal-hint {
+        font-size: 11px;
+        margin-top: 10px;
+    }
+    
+    .terminal-footer {
+        padding: 8px 10px;
+    }
+    
+    .terminal-skip {
+        padding: 8px 16px;
+        font-size: 10px;
+        width: 100%;
     }
 }
 

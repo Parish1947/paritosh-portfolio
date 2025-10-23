@@ -66,9 +66,14 @@ function initTargetShootingGame() {
     gameOverlay.style.opacity = '1';
     gameOverlay.classList.remove('hidden');
     
-    // Focus on input
+    // Focus on input (with mobile handling)
     setTimeout(() => {
         terminalInput.focus();
+        
+        // On mobile, ensure keyboard appears
+        if (window.innerWidth <= 768) {
+            terminalInput.click();
+        }
     }, 300);
     
     console.log('Terminal overlay should now be visible');
