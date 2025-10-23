@@ -5,21 +5,28 @@
     box-sizing: border-box;
 }
 
-/* Target Shooting Game Styles */
+/* Terminal Typing Challenge Styles */
 .game-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
     z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 1;
     transition: opacity 0.5s ease;
-    cursor: auto !important;
+    cursor: default !important;
+    animation: terminalFadeIn 0.3s ease;
+}
+
+@keyframes terminalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .game-overlay.hidden {
@@ -27,194 +34,184 @@
     pointer-events: none;
 }
 
-/* Hide custom cursor during game */
-.game-overlay ~ .custom-cursor,
-.game-overlay ~ .cursor-trail,
-.game-overlay ~ .cursor-glow {
-    display: none !important;
-}
+/* Cursor hiding is now handled by JavaScript */
 
-.game-container {
+.terminal-container {
     width: 90%;
-    max-width: 1200px;
-    height: 90vh;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.game-header {
-    text-align: center;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-}
-
-.game-title {
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 700;
-    color: #fafafa;
-    margin-bottom: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
-.game-instruction {
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    color: #b8b8b8;
-    margin-bottom: 20px;
-}
-
-.game-instruction span {
-    color: #fafafa;
-    font-weight: 600;
-    font-size: clamp(1.2rem, 3vw, 1.5rem);
-}
-
-.game-stats {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-}
-
-.stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-}
-
-.stat-label {
-    font-size: 14px;
-    color: #808080;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.stat-value {
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    font-weight: 700;
-    color: #fafafa;
-}
-
-.game-area {
-    flex: 1;
-    position: relative;
-    background: rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
+    max-width: 800px;
+    background: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
     overflow: hidden;
-    cursor: crosshair !important;
+    animation: terminalSlideIn 0.4s ease;
 }
 
+@keyframes terminalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.terminal-header {
+    background: #2d2d2d;
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid #3d3d3d;
+}
+
+.terminal-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.terminal-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.terminal-btn.close {
+    background: #ff5f56;
+}
+
+.terminal-btn.minimize {
+    background: #ffbd2e;
+}
+
+.terminal-btn.maximize {
+    background: #27c93f;
+}
+
+.terminal-title {
+    color: #8a8a8a;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Courier New', monospace;
+}
+
+.terminal-body {
+    background: #1e1e1e;
+    padding: 20px;
+    min-height: 300px;
+    font-family: 'Courier New', Consolas, monospace;
+}
+
+.terminal-output {
+    color: #d4d4d4;
+}
+
+.terminal-line {
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #d4d4d4;
+}
+
+.terminal-challenge {
+    color: #4ec9b0;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 15px 0;
+    animation: terminalPulse 2s ease-in-out infinite;
+}
+
+@keyframes terminalPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    position: relative;
+}
+
+.terminal-prompt {
+    color: #4ec9b0;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #d4d4d4;
+    font-family: 'Courier New', Consolas, monospace;
+    font-size: 16px;
+    padding: 5px 0;
+    caret-color: #4ec9b0;
+}
+
+.terminal-cursor {
+    width: 8px;
+    height: 20px;
+    background: #4ec9b0;
+    animation: cursorBlink 1s step-end infinite;
+    position: absolute;
+    right: 0;
+}
+
+@keyframes cursorBlink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.terminal-hint {
+    color: #ce9178;
+    font-size: 13px;
+    font-style: italic;
+    min-height: 20px;
+    margin-top: 15px;
+}
+
+/* Terminal game cursor styles */
 .game-overlay,
-.game-overlay *,
-.game-container,
-.game-container * {
+.game-overlay * {
     cursor: default !important;
 }
 
-.game-overlay .skip-btn {
+.terminal-skip {
     cursor: pointer !important;
 }
 
-.game-area {
-    cursor: crosshair !important;
+/* Old target game styles removed */
+
+.terminal-footer {
+    background: #2d2d2d;
+    padding: 12px 15px;
+    border-top: 1px solid #3d3d3d;
+    text-align: center;
 }
 
-.game-area * {
-    cursor: crosshair !important;
-}
-
-.game-area .target {
-    cursor: pointer !important;
-}
-
-.target {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #fafafa 0%, #d0d0d0 50%, #a0a0a0 100%);
-    border: 3px solid #ffffff;
-    box-shadow: 
-        0 0 20px rgba(255, 255, 255, 0.5),
-        inset 0 0 20px rgba(0, 0, 0, 0.3);
-    cursor: pointer !important;
-    transition: transform 0.1s ease;
-    animation: targetFloat 2s ease-in-out infinite;
-}
-
-.target::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #3a3a3a;
-    border: 2px solid #fafafa;
-}
-
-.target::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #fafafa;
-}
-
-.target:hover {
-    transform: scale(1.1);
-}
-
-@keyframes targetFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-}
-
-.target.hit {
-    animation: targetHit 0.3s ease forwards;
-}
-
-@keyframes targetHit {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.5); opacity: 0.5; }
-    100% { transform: scale(0); opacity: 0; }
-}
-
-.skip-btn {
-    padding: 15px 40px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50px;
-    color: #b8b8b8;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer !important;
+.terminal-skip {
+    background: transparent;
+    border: 1px solid #4ec9b0;
+    color: #4ec9b0;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-family: 'Courier New', Consolas, monospace;
+    font-size: 12px;
+    cursor: pointer;
     transition: all 0.3s ease;
-    align-self: center;
-    letter-spacing: 1px;
 }
 
-.skip-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fafafa;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+.terminal-skip:hover {
+    background: #4ec9b0;
+    color: #1e1e1e;
 }
 
 .hit-effect {
@@ -232,50 +229,48 @@
     100% { transform: scale(2); opacity: 0; }
 }
 
-/* Mobile Game Styles */
+/* Mobile Terminal Styles */
 @media (max-width: 768px) {
-    .game-container {
-        height: 85vh;
+    .terminal-container {
+        width: 95%;
+        max-width: 100%;
     }
     
-    .game-header {
+    .terminal-body {
         padding: 15px;
+        min-height: 250px;
     }
     
-    .game-stats {
-        gap: 20px;
+    .terminal-line {
+        font-size: 13px;
     }
     
-    .target {
-        width: 50px;
-        height: 50px;
+    .terminal-challenge {
+        font-size: 16px;
+        letter-spacing: 1px;
     }
     
-    .target::before {
-        width: 25px;
-        height: 25px;
-    }
-    
-    .target::after {
-        width: 8px;
-        height: 8px;
-    }
-    
-    .skip-btn {
-        padding: 12px 30px;
+    .terminal-input {
         font-size: 14px;
     }
 }
 
 @media (max-width: 480px) {
-    .game-container {
-        width: 95%;
-        height: 80vh;
+    .terminal-container {
+        width: 98%;
+        border-radius: 8px;
     }
     
-    .target {
-        width: 45px;
-        height: 45px;
+    .terminal-body {
+        padding: 12px;
+    }
+    
+    .terminal-line {
+        font-size: 12px;
+    }
+    
+    .terminal-challenge {
+        font-size: 14px;
     }
 }
 
@@ -284,10 +279,9 @@
     will-change: auto;
 }
 
-.hero, .hero-content, .hero-text, .hero-title, .title-line, .hero-subtitle, .hero-buttons, 
-.hero-image, .image-container, .profile-image, .section-title, .section-subtitle,
-.project-card, .achievement-card, .timeline-item, .skill-item, .contact-item {
-    will-change: transform, opacity;
+/* Reduced will-change usage for better performance - only on elements that actually animate */
+.project-card, .achievement-card, .timeline-item {
+    will-change: transform;
 }
 
 html {
@@ -303,21 +297,7 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Custom cursor will be added by JavaScript */
-body.custom-cursor-active {
-    cursor: none;
-}
-
-body.custom-cursor-active * {
-    cursor: none !important;
-}
-
-/* Show default cursor only on mobile devices */
-@media (max-width: 768px) {
-    body, * {
-        cursor: auto !important;
-    }
-}
+/* Custom cursor styles will be added here */
 
 .container {
     max-width: 1200px;
@@ -430,13 +410,10 @@ body.custom-cursor-active * {
         radial-gradient(circle at 20% 80%, rgba(58, 58, 58, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-    animation: heroBreathing 8s ease-in-out infinite;
+    /* Animation removed for performance */
 }
 
-@keyframes heroBreathing {
-    0%, 100% { opacity: 0.8; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.05); }
-}
+/* heroBreathing animation removed */
 
 .hero::after {
     content: '';
@@ -447,13 +424,10 @@ body.custom-cursor-active * {
     bottom: 0;
     background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.01)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
     opacity: 0.3;
-    animation: grainMove 20s linear infinite;
+    /* Animation removed for better cursor performance */
 }
 
-@keyframes grainMove {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(-100px, -100px); }
-}
+/* Grain animation removed to improve cursor performance in hero section */
 
 .hero-background {
     position: absolute;
@@ -493,55 +467,24 @@ body.custom-cursor-active * {
     display: block;
     font-size: clamp(4rem, 12vw, 8rem);
     font-weight: 900;
-    color: var(--text-primary);
     line-height: 0.9;
     margin-bottom: 20px;
-    text-shadow: 
-        0 0 50px var(--text-primary),
-        0 0 100px rgba(58, 58, 58, 0.3),
-        0 0 150px rgba(200, 200, 200, 0.1);
     letter-spacing: -0.02em;
-    background: linear-gradient(135deg, #ffffff 0%, #d0d0d0 50%, #a0a0a0 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: heroNameGlow 4s ease-in-out infinite alternate;
     position: relative;
+    
+    /* Knockout text - shows background through text with inverted colors */
+    background: url('profile-image.jpg') center/cover;
+    background-attachment: fixed;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    
+    /* Invert the background colors visible through text */
+    filter: invert(1) contrast(1.3) brightness(1.2);
 }
 
-.hero-name::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
-    opacity: 0.1;
-    filter: blur(20px);
-    z-index: -1;
-    animation: heroNameAura 6s ease-in-out infinite;
-}
-
-@keyframes heroNameGlow {
-    0% { 
-        text-shadow: 
-            0 0 50px var(--text-primary),
-            0 0 100px rgba(58, 58, 58, 0.3),
-            0 0 150px rgba(200, 200, 200, 0.1);
-    }
-    100% { 
-        text-shadow: 
-            0 0 50px var(--text-primary),
-            0 0 150px rgba(58, 58, 58, 0.5),
-            0 0 200px rgba(118, 75, 162, 0.4);
-    }
-}
-
-@keyframes heroNameAura {
-    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.1; }
-    50% { transform: scale(1.1) rotate(180deg); opacity: 0.2; }
-}
+/* All heavy animations removed for performance */
 
 .hero-role {
     display: block;
@@ -2917,51 +2860,7 @@ body {
     }
 }
 
-/* Custom Cursor - Artistic */
-/* Cursor hiding is now controlled by body.custom-cursor-active class */
-
-.custom-cursor {
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(200, 200, 200, 0.7) 100%);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.05s ease-out;
-    mix-blend-mode: difference;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.3);
-    will-change: transform;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-}
-
-.cursor-trail {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    background: rgba(180, 180, 180, 0.3);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transition: all 0.3s ease;
-}
-
-.cursor-glow {
-    position: fixed;
-    width: 40px;
-    height: 40px;
-    background: radial-gradient(circle, rgba(180, 180, 180, 0.1) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9997;
-    transition: transform 0.15s ease-out;
-    will-change: transform;
-}
-
-@keyframes cursorPulse {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.2); opacity: 1; }
-}
+/* Custom Cursor will be added here */
 
 /* Landscape Mobile */
 @media (max-width: 768px) and (orientation: landscape) {

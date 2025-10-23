@@ -15,36 +15,34 @@ window.addEventListener('load', () => {
     }, 200);
 });
 
-// Target Shooting Game
+// Terminal Typing Challenge
 function initTargetShootingGame() {
-    console.log('Initializing target shooting game...');
+    console.log('Initializing terminal typing challenge...');
     
     const gameOverlay = document.getElementById('game-overlay');
-    const gameArea = document.getElementById('game-area');
-    const scoreElement = document.getElementById('score');
-    const timerElement = document.getElementById('timer');
+    const terminalInput = document.getElementById('terminal-input');
+    const challengeText = document.getElementById('challenge-text');
+    const hintText = document.getElementById('hint-text');
     const skipBtn = document.getElementById('skip-game');
     
     // Check if elements exist
-    if (!gameOverlay || !gameArea || !scoreElement || !timerElement || !skipBtn) {
-        console.error('Game elements not found:', {
-            gameOverlay: !!gameOverlay,
-            gameArea: !!gameArea,
-            scoreElement: !!scoreElement,
-            timerElement: !!timerElement,
-            skipBtn: !!skipBtn
-        });
+    if (!gameOverlay || !terminalInput || !challengeText || !hintText || !skipBtn) {
+        console.error('Terminal elements not found');
         return;
     }
     
-    console.log('All game elements found');
+    console.log('All terminal elements found');
     
-    let score = 0;
-    let timeLeft = 15;
-    let gameActive = true;
-    let targetsNeeded = 5;
-    let targetInterval;
-    let timerInterval;
+    const challenges = [
+        'ACCESS PORTFOLIO',
+        'UNLOCK PORTFOLIO',
+        'ENTER PORTFOLIO',
+        'OPEN PORTFOLIO',
+        'SHOW PORTFOLIO'
+    ];
+    
+    const currentChallenge = challenges[Math.floor(Math.random() * challenges.length)];
+    challengeText.textContent = currentChallenge;
     
     // Check if user has played before (session storage)
     if (sessionStorage.getItem('gameCompleted')) {
@@ -53,11 +51,14 @@ function initTargetShootingGame() {
         return;
     }
     
-    console.log('Showing game overlay...');
+    console.log('Showing terminal overlay...');
     
-    // Temporarily remove custom cursor during game
-    document.body.classList.remove('custom-cursor-active');
-    console.log('Custom cursor class removed for game');
+    // Hide custom cursor and particles during game
+    const cursor = document.querySelector('.custom-cursor');
+    const particles = document.querySelector('.cursor-particles');
+    if (cursor) cursor.style.display = 'none';
+    if (particles) particles.style.display = 'none';
+    console.log('Custom cursor hidden for game');
     
     // Force show game overlay
     gameOverlay.style.display = 'flex';
@@ -65,109 +66,38 @@ function initTargetShootingGame() {
     gameOverlay.style.opacity = '1';
     gameOverlay.classList.remove('hidden');
     
-    console.log('Game overlay should now be visible');
+    // Focus on input
+    setTimeout(() => {
+        terminalInput.focus();
+    }, 300);
     
-    // Start the game
-    function startGame() {
-        spawnTarget();
-        targetInterval = setInterval(spawnTarget, 1500); // Spawn target every 1.5s
+    console.log('Terminal overlay should now be visible');
+    
+    // Handle typing
+    terminalInput.addEventListener('input', (e) => {
+        const typed = e.target.value.toUpperCase();
+        const target = currentChallenge;
         
-        // Start timer
-        timerInterval = setInterval(() => {
-            timeLeft--;
-            timerElement.textContent = `${timeLeft}s`;
+        // Check if typed text matches the beginning of challenge
+        if (target.startsWith(typed)) {
+            hintText.textContent = '';
+            hintText.style.color = '#4ec9b0';
             
-            if (timeLeft <= 0) {
-                // Time's up - let them in anyway
+            // Check if complete
+            if (typed === target) {
                 winGame();
             }
-        }, 1000);
-    }
-    
-    // Spawn a target at random position
-    function spawnTarget() {
-        if (!gameActive) return;
-        
-        const target = document.createElement('div');
-        target.className = 'target';
-        
-        // Random position within game area
-        const gameRect = gameArea.getBoundingClientRect();
-        const maxX = gameRect.width - 80; // 80px = target width + padding
-        const maxY = gameRect.height - 80;
-        
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY;
-        
-        target.style.left = `${randomX}px`;
-        target.style.top = `${randomY}px`;
-        
-        // Click handler
-        target.addEventListener('click', (e) => {
-            hitTarget(target, e);
-        });
-        
-        gameArea.appendChild(target);
-        
-        // Remove target after 3 seconds if not hit
-        setTimeout(() => {
-            if (target.parentElement) {
-                target.remove();
-            }
-        }, 3000);
-    }
-    
-    // Hit target
-    function hitTarget(target, event) {
-        if (!gameActive) return;
-        
-        score++;
-        scoreElement.textContent = score;
-        
-        // Add hit class for animation
-        target.classList.add('hit');
-        
-        // Create hit effect
-        const hitEffect = document.createElement('div');
-        hitEffect.className = 'hit-effect';
-        hitEffect.style.left = `${event.clientX - gameArea.getBoundingClientRect().left - 50}px`;
-        hitEffect.style.top = `${event.clientY - gameArea.getBoundingClientRect().top - 50}px`;
-        gameArea.appendChild(hitEffect);
-        
-        // Remove hit effect after animation
-        setTimeout(() => hitEffect.remove(), 500);
-        
-        // Remove target
-        setTimeout(() => target.remove(), 300);
-        
-        // Check win condition
-        if (score >= targetsNeeded) {
-            winGame();
+        } else {
+            hintText.textContent = '❌ Incorrect! Keep typing...';
+            hintText.style.color = '#f48771';
         }
-    }
+    });
     
     // Win game
     function winGame() {
-        gameActive = false;
-        clearInterval(targetInterval);
-        clearInterval(timerInterval);
-        
-        // Show success message
-        gameArea.innerHTML = `
-            <div style="
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 100%;
-                gap: 20px;
-            ">
-                <div style="font-size: 4rem;">🎯</div>
-                <div style="font-size: 2rem; color: #fafafa; font-weight: 700;">EXCELLENT SHOT!</div>
-                <div style="font-size: 1.2rem; color: #b8b8b8;">Score: ${score} | Time: ${15 - timeLeft}s</div>
-                <div style="font-size: 1rem; color: #808080;">Entering portfolio...</div>
-            </div>
-        `;
+        terminalInput.disabled = true;
+        hintText.textContent = '✓ Access granted! Loading portfolio...';
+        hintText.style.color = '#4ec9b0';
         
         // Mark as completed in session
         sessionStorage.setItem('gameCompleted', 'true');
@@ -175,7 +105,7 @@ function initTargetShootingGame() {
         // Fade out and enter portfolio
         setTimeout(() => {
             endGame();
-        }, 2000);
+        }, 1500);
     }
     
     // End game and show portfolio
@@ -183,57 +113,37 @@ function initTargetShootingGame() {
         gameOverlay.classList.add('hidden');
         setTimeout(() => {
             gameOverlay.style.display = 'none';
-            console.log('Game ended, portfolio visible');
+            console.log('Game ended, showing portfolio');
             
-            // Ensure custom cursor is visible after game
-            const body = document.body;
-            if (!body.classList.contains('custom-cursor-active')) {
-                body.classList.add('custom-cursor-active');
-                console.log('Custom cursor class added');
-            }
-            
-            // Make sure cursor elements exist and are visible
+            // Show custom cursor and particles after game
             let cursor = document.querySelector('.custom-cursor');
-            let trail = document.querySelector('.cursor-trail');
-            let glow = document.querySelector('.cursor-glow');
+            let particles = document.querySelector('.cursor-particles');
             
-            if (!cursor || !trail || !glow) {
-                console.log('Custom cursor elements not found, initializing...');
+            if (!cursor || !particles) {
+                console.log('Custom cursor not found, initializing...');
                 initCustomCursor();
-                
-                // Get elements again after initialization
-                setTimeout(() => {
-                    cursor = document.querySelector('.custom-cursor');
-                    trail = document.querySelector('.cursor-trail');
-                    glow = document.querySelector('.cursor-glow');
-                    
-                    if (cursor) {
-                        cursor.style.display = 'block';
-                        console.log('Custom cursor element shown after init');
-                    }
-                    if (trail) trail.style.display = 'block';
-                    if (glow) glow.style.display = 'block';
-                }, 100);
             } else {
                 cursor.style.display = 'block';
-                trail.style.display = 'block';
-                glow.style.display = 'block';
-                console.log('Custom cursor elements shown');
+                particles.style.display = 'block';
+                console.log('Custom cursor shown');
             }
         }, 500);
     }
     
-    // Skip button
+    // Skip button (ESC key or click)
     skipBtn.addEventListener('click', () => {
-        gameActive = false;
-        clearInterval(targetInterval);
-        clearInterval(timerInterval);
         sessionStorage.setItem('gameCompleted', 'true');
         endGame();
     });
     
-    // Start the game
-    startGame();
+    // ESC key to skip
+    document.addEventListener('keydown', function escHandler(e) {
+        if (e.key === 'Escape') {
+            sessionStorage.setItem('gameCompleted', 'true');
+            endGame();
+            document.removeEventListener('keydown', escHandler);
+        }
+    });
 }
 
 // Theme Toggle Functionality
@@ -418,11 +328,14 @@ function initStatsCounter() {
     statNumbers.forEach(stat => observer.observe(stat));
 }
 
-// Particle Background System
+// Particle Background System - DISABLED for better cursor performance
 function initParticleSystem() {
+    console.log('Particle system disabled for optimal cursor performance');
+    return; // Disabled entirely
+    
     const container = document.getElementById('particles-container');
     const particles = [];
-    const particleCount = 50;
+    const particleCount = 30; // Reduced from 50 to 30 for better performance
     
     // Create particles
     for (let i = 0; i < particleCount; i++) {
@@ -468,36 +381,52 @@ function initParticleSystem() {
         });
     }
     
-    // Mouse interaction
+    // Mouse interaction - THROTTLED for performance
     let mouseX = 0;
     let mouseY = 0;
+    let isThrottled = false;
     
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
         
-        particles.forEach((particle, index) => {
-            const rect = particle.getBoundingClientRect();
-            const distance = Math.sqrt(
-                Math.pow(mouseX - (rect.left + rect.width/2), 2) + 
-                Math.pow(mouseY - (rect.top + rect.height/2), 2)
-            );
+        // Throttle mouse interaction to every 100ms instead of every frame
+        if (isThrottled) return;
+        isThrottled = true;
+        
+        setTimeout(() => {
+            isThrottled = false;
             
-            if (distance < 100) {
-                const force = (100 - distance) / 100;
-                gsap.to(particle, {
-                    scale: 1 + force * 0.5,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            } else {
-                gsap.to(particle, {
-                    scale: 1,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            }
-        });
+            // Only check particles in hero section
+            const heroSection = document.querySelector('.hero');
+            if (!heroSection) return;
+            
+            const heroRect = heroSection.getBoundingClientRect();
+            if (mouseY < heroRect.top || mouseY > heroRect.bottom) return;
+            
+            particles.forEach((particle) => {
+                const rect = particle.getBoundingClientRect();
+                const distance = Math.sqrt(
+                    Math.pow(mouseX - (rect.left + rect.width/2), 2) + 
+                    Math.pow(mouseY - (rect.top + rect.height/2), 2)
+                );
+                
+                if (distance < 100) {
+                    const force = (100 - distance) / 100;
+                    gsap.to(particle, {
+                        scale: 1 + force * 0.5,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                } else {
+                    gsap.to(particle, {
+                        scale: 1,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                }
+            });
+        }, 100);
     });
     
     animateParticles();
@@ -690,106 +619,163 @@ function initSoundEffects() {
     }
 }
 
-// Custom Cursor Effects - Artistic
+// Custom Cursor - GPU Accelerated with Transform
 function initCustomCursor() {
+    // Disable on mobile
     if (window.innerWidth <= 768) {
-        console.log('Mobile device detected, skipping custom cursor');
-        return; // Disable on mobile
-    }
-    
-    // Check if cursor already exists
-    if (document.querySelector('.custom-cursor')) {
-        console.log('Custom cursor already exists, skipping initialization');
+        console.log('Mobile device - custom cursor disabled');
         return;
     }
     
-    console.log('Initializing custom cursor');
+    // Check if already initialized
+    if (document.querySelector('.custom-cursor')) {
+        console.log('Custom cursor already exists');
+        return;
+    }
     
-    // Add class to hide default cursor
-    document.body.classList.add('custom-cursor-active');
+    console.log('Creating GPU-accelerated custom cursor...');
     
+    // Create main cursor
     const cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
+    cursor.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        background: #fafafa;
+        border: 2px solid #3a3a3a;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+        will-change: transform;
+        transform: translate3d(0, 0, 0);
+    `;
     document.body.appendChild(cursor);
     
-    const trail = document.createElement('div');
-    trail.className = 'cursor-trail';
-    document.body.appendChild(trail);
+    // Create particle container
+    const particleContainer = document.createElement('div');
+    particleContainer.className = 'cursor-particles';
+    particleContainer.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9998;
+    `;
+    document.body.appendChild(particleContainer);
     
-    const glow = document.createElement('div');
-    glow.className = 'cursor-glow';
-    document.body.appendChild(glow);
+    console.log('GPU-accelerated cursor created');
     
-    console.log('Custom cursor elements created');
+    // Hide default cursor
+    document.body.style.cursor = 'none';
+    const style = document.createElement('style');
+    style.textContent = `
+        body * { cursor: none !important; }
+        @media (max-width: 768px) {
+            body, body * { cursor: auto !important; }
+        }
+        .cursor-particle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 6px;
+            background: rgba(250, 250, 250, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            will-change: transform, opacity;
+            animation: particleFade 0.6s ease-out forwards;
+        }
+        @keyframes particleFade {
+            0% { 
+                opacity: 1; 
+                transform: translate3d(-50%, -50%, 0) scale(1);
+            }
+            100% { 
+                opacity: 0; 
+                transform: translate3d(-50%, -50%, 0) scale(0);
+            }
+        }
+    `;
+    document.head.appendChild(style);
     
-    let mouseX = 0, mouseY = 0;
-    let trailX = 0, trailY = 0;
-    let glowX = 0, glowY = 0;
+    // Track mouse position - NO interpolation for instant response
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let isHovering = false;
     
-    // Smooth animation loop
-    function animateCursor() {
-        // Trail follows cursor with delay
-        trailX += (mouseX - trailX) * 0.15;
-        trailY += (mouseY - trailY) * 0.15;
-        trail.style.left = trailX - 4 + 'px';
-        trail.style.top = trailY - 4 + 'px';
-        
-        // Glow follows with more delay
-        glowX += (mouseX - glowX) * 0.05;
-        glowY += (mouseY - glowY) * 0.05;
-        glow.style.left = glowX - 20 + 'px';
-        glow.style.top = glowY - 20 + 'px';
-        
-        requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
-    
+    // Update mouse position and cursor instantly using transform
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
         
-        cursor.style.left = mouseX - 10 + 'px';
-        cursor.style.top = mouseY - 10 + 'px';
-    });
+        // Use transform3d for GPU acceleration - INSTANT update
+        cursor.style.transform = `translate3d(${mouseX - 10}px, ${mouseY - 10}px, 0)`;
+    }, { passive: true });
     
-    // Interactive elements with artistic effects
-    const interactiveElements = document.querySelectorAll('a, button, .btn, .project-card, .skill-card, .contact-item');
+    // Particle trail system - simplified
+    let particleTimer = 0;
+    const particleInterval = 3; // Create particle every 3 frames for less overhead
+    let frameCount = 0;
+    
+    function createParticle(x, y) {
+        const particle = document.createElement('div');
+        particle.className = 'cursor-particle';
+        
+        // Randomize particle slightly
+        const offsetX = (Math.random() - 0.5) * 8;
+        const offsetY = (Math.random() - 0.5) * 8;
+        particle.style.transform = `translate3d(${x + offsetX}px, ${y + offsetY}px, 0)`;
+        
+        particleContainer.appendChild(particle);
+        
+        // Remove particle after animation
+        setTimeout(() => {
+            particle.remove();
+        }, 600);
+    }
+    
+    // Particle creation loop - separate from cursor movement
+    function animateParticles() {
+        frameCount++;
+        if (frameCount >= particleInterval) {
+            createParticle(mouseX, mouseY);
+            frameCount = 0;
+        }
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+    
+    // Hover effects on interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, .btn, .project-card, .skill-card, .achievement-card, .contact-item, .nav-link');
+    
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
-            cursor.style.transform = 'scale(2) rotate(45deg)';
-            cursor.style.background = 'radial-gradient(circle, rgba(118, 75, 162, 0.9) 0%, rgba(102, 126, 234, 0.7) 100%)';
-            cursor.style.boxShadow = '0 0 30px rgba(118, 75, 162, 0.8)';
-            
-            glow.style.transform = 'scale(1.5)';
-            glow.style.background = 'radial-gradient(circle, rgba(118, 75, 162, 0.2) 0%, transparent 70%)';
+            isHovering = true;
+            cursor.style.width = '28px';
+            cursor.style.height = '28px';
+            cursor.style.background = '#3a3a3a';
+            cursor.style.borderColor = '#fafafa';
+            cursor.style.boxShadow = '0 0 20px rgba(58, 58, 58, 0.8)';
+            cursor.style.transition = 'width 0.2s ease, height 0.2s ease, background 0.2s ease, border-color 0.2s ease';
         });
         
         el.addEventListener('mouseleave', () => {
-            cursor.style.transform = 'scale(1) rotate(0deg)';
-            cursor.style.background = 'radial-gradient(circle, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.6) 100%)';
-            cursor.style.boxShadow = '0 0 20px rgba(102, 126, 234, 0.5)';
-            
-            glow.style.transform = 'scale(1)';
-            glow.style.background = 'radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%)';
+            isHovering = false;
+            cursor.style.width = '20px';
+            cursor.style.height = '20px';
+            cursor.style.background = '#fafafa';
+            cursor.style.borderColor = '#3a3a3a';
+            cursor.style.boxShadow = '0 0 15px rgba(255, 255, 255, 0.6)';
         });
     });
     
-    // Special effects for different element types
-    const projectCards = document.querySelectorAll('.project-card');
-    projectCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            cursor.style.transform = 'scale(2.5) rotate(90deg)';
-            cursor.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(102, 126, 234, 0.8) 100%)';
-        });
-    });
-    
-    const skillCards = document.querySelectorAll('.skill-card');
-    skillCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            cursor.style.transform = 'scale(1.8) rotate(-45deg)';
-            cursor.style.background = 'radial-gradient(circle, rgba(118, 75, 162, 0.9) 0%, rgba(102, 126, 234, 0.7) 100%)';
-        });
-    });
+    console.log('GPU-accelerated cursor initialized! 🚀');
 }
 
 // Initialize animations when DOM is loaded
@@ -810,60 +796,40 @@ document.addEventListener('DOMContentLoaded', function() {
     initCustomCursor();
 });
 
-// Hero Section Animations
+// Hero Section Animations - Simplified for performance
 function initAnimations() {
-    // Hero title animation - redesigned
+    // Simple fade-in for hero elements (no heavy transforms)
     gsap.timeline()
         .fromTo('.hero-name', {
-            opacity: 0,
-            y: 100,
-            scale: 0.8
+            opacity: 0
         }, {
             opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 1.2,
-            ease: 'power3.out'
+            duration: 0.8,
+            ease: 'power2.out'
         })
         .fromTo('.hero-role', {
-            opacity: 0,
-            y: 50
+            opacity: 0
         }, {
             opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out'
-        }, '-=0.6')
-        .fromTo('.hero-description', {
-            opacity: 0,
-            y: 30
-        }, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out'
+            duration: 0.6,
+            ease: 'power2.out'
         }, '-=0.4')
-        .fromTo('.hero-buttons', {
-            opacity: 0,
-            y: 30
+        .fromTo('.hero-description', {
+            opacity: 0
         }, {
             opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out'
-        }, '-=0.4');
+            duration: 0.6,
+            ease: 'power2.out'
+        }, '-=0.3')
+        .fromTo('.hero-buttons', {
+            opacity: 0
+        }, {
+            opacity: 1,
+            duration: 0.6,
+            ease: 'power2.out'
+        }, '-=0.3');
 
-    // Parallax effect for hero background
-    gsap.to('.hero-image', {
-        yPercent: -50,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '.hero',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true
-        }
-    });
+    // Parallax removed for better cursor performance
 
     // Simplified section reveal animations for better performance
     gsap.utils.toArray('section').forEach((section, index) => {
@@ -1080,13 +1046,14 @@ function initNavigation() {
             document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
         });
 
-        // Close menu when clicking on nav links
+        // Close menu when clicking on nav links - INSTANT
     navLinks.forEach(link => {
             link.addEventListener('click', () => {
+                // Close menu instantly
                 hamburgerMenu.classList.remove('active');
                 navMenu.classList.remove('active');
                 document.body.style.overflow = 'auto';
-            });
+            }, { passive: true }); // Passive for better performance
         });
 
         // Close menu when clicking outside
@@ -1124,41 +1091,38 @@ function initNavigation() {
 
 // Smooth scrolling for all links
 function initSmoothScrolling() {
-    // Smooth scroll for all anchor links (navigation and buttons)
+    // Instant, fast scroll for all anchor links (navigation and buttons)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
+            e.stopPropagation(); // Stop event bubbling for instant response
+            
             const targetId = this.getAttribute('href');
             const target = document.querySelector(targetId);
             
-            console.log('Clicked link:', targetId, 'Target element:', target); // Debug log
-            
             if (target) {
-                // Try GSAP ScrollTo first
-                try {
+                // Immediate GSAP scroll - no delay
+                requestAnimationFrame(() => {
+                    try {
                 gsap.to(window, {
-                        duration: 1.2,
+                            duration: 0.4,
                     scrollTo: {
                         y: target,
                         offsetY: 80
                     },
-                        ease: 'power3.inOut',
-                        onComplete: () => {
-                            console.log('Scroll completed to:', targetId);
-                        }
-                    });
-                } catch (error) {
-                    // Fallback to native smooth scroll
-                    console.log('Using fallback smooth scroll');
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            } else {
-                console.error('Target element not found for:', targetId);
+                            ease: 'power2.out',
+                            immediateRender: true // Start immediately
+                        });
+                    } catch (error) {
+                        // Instant fallback
+                        target.scrollIntoView({
+                            behavior: 'auto',
+                            block: 'start'
+                        });
+                    }
+                });
             }
-        });
+        }, { passive: false }); // Not passive so preventDefault works
     });
 }
 
@@ -1201,171 +1165,7 @@ document.querySelectorAll('.project-card, .achievement-card, .timeline-item').fo
 });
 
 // Enhanced custom cursor with aesthetic effects
-document.addEventListener('DOMContentLoaded', () => {
-    // Create main cursor
-    const cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    cursor.style.cssText = `
-        position: fixed;
-        width: 20px;
-        height: 20px;
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        mix-blend-mode: difference;
-        transition: transform 0.1s ease;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-    `;
-    document.body.appendChild(cursor);
-
-    // Create cursor trail
-    const trail = document.createElement('div');
-    trail.className = 'cursor-trail';
-    trail.style.cssText = `
-        position: fixed;
-        width: 40px;
-        height: 40px;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9998;
-        transition: all 0.3s ease;
-    `;
-    document.body.appendChild(trail);
-
-    // Create glow effect
-    const glow = document.createElement('div');
-    glow.className = 'cursor-glow';
-    glow.style.cssText = `
-        position: fixed;
-        width: 100px;
-        height: 100px;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9997;
-        transition: all 0.5s ease;
-    `;
-    document.body.appendChild(glow);
-
-    // Mouse movement tracking
-    let mouseX = 0, mouseY = 0;
-    let cursorX = 0, cursorY = 0;
-    let trailX = 0, trailY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-
-    // Smooth cursor animation
-    function animateCursor() {
-        cursorX += (mouseX - cursorX) * 0.2;
-        cursorY += (mouseY - cursorY) * 0.2;
-        
-        trailX += (mouseX - trailX) * 0.1;
-        trailY += (mouseY - trailY) * 0.1;
-
-        cursor.style.left = cursorX - 10 + 'px';
-        cursor.style.top = cursorY - 10 + 'px';
-        
-        trail.style.left = trailX - 20 + 'px';
-        trail.style.top = trailY - 20 + 'px';
-        
-        glow.style.left = mouseX - 50 + 'px';
-        glow.style.top = mouseY - 50 + 'px';
-
-        requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
-
-    // Enhanced cursor effects for interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .btn, .nav-link, .skill-item, .project-card, .achievement-card, .contact-item');
-    
-    interactiveElements.forEach(element => {
-        element.addEventListener('mouseenter', () => {
-            cursor.style.transform = 'scale(1.5)';
-            cursor.style.background = 'rgba(255, 255, 255, 0.9)';
-            cursor.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.8)';
-            trail.style.transform = 'scale(1.2)';
-            trail.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%)';
-            glow.style.transform = 'scale(1.3)';
-            glow.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%)';
-        });
-
-        element.addEventListener('mouseleave', () => {
-            cursor.style.transform = 'scale(1)';
-            cursor.style.background = 'rgba(255, 255, 255, 0.8)';
-            cursor.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.5)';
-            trail.style.transform = 'scale(1)';
-            trail.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%)';
-            glow.style.transform = 'scale(1)';
-            glow.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%)';
-        });
-    });
-
-    // Special cursor effects for different element types
-    const buttons = document.querySelectorAll('.btn, button');
-    buttons.forEach(button => {
-        button.addEventListener('mouseenter', () => {
-            cursor.style.borderRadius = '4px';
-            cursor.style.transform = 'scale(1.2) rotate(45deg)';
-        });
-        button.addEventListener('mouseleave', () => {
-            cursor.style.borderRadius = '50%';
-            cursor.style.transform = 'scale(1) rotate(0deg)';
-        });
-    });
-
-    const links = document.querySelectorAll('a, .nav-link');
-    links.forEach(link => {
-        link.addEventListener('mouseenter', () => {
-            cursor.style.borderRadius = '2px';
-            cursor.style.transform = 'scale(1.3)';
-        });
-        link.addEventListener('mouseleave', () => {
-            cursor.style.borderRadius = '50%';
-            cursor.style.transform = 'scale(1)';
-        });
-    });
-
-    const cards = document.querySelectorAll('.project-card, .achievement-card, .timeline-content');
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            cursor.style.transform = 'scale(2)';
-            cursor.style.background = 'rgba(255, 255, 255, 0.3)';
-            cursor.style.boxShadow = '0 0 40px rgba(255, 255, 255, 0.6)';
-        });
-        card.addEventListener('mouseleave', () => {
-            cursor.style.transform = 'scale(1)';
-            cursor.style.background = 'rgba(255, 255, 255, 0.8)';
-            cursor.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.5)';
-        });
-    });
-
-    // Hide cursor on mobile and add touch interactions
-    if (window.innerWidth <= 768) {
-        cursor.style.display = 'none';
-        trail.style.display = 'none';
-        glow.style.display = 'none';
-        
-        // Add mobile touch interactions
-        const touchElements = document.querySelectorAll('.project-card, .achievement-card, .timeline-content, .contact-item, .skill-item');
-        
-        touchElements.forEach(element => {
-            element.addEventListener('touchstart', () => {
-                element.style.transform = 'scale(0.98)';
-                element.style.transition = 'transform 0.1s ease';
-            });
-            
-            element.addEventListener('touchend', () => {
-                element.style.transform = 'scale(1)';
-                element.style.transition = 'transform 0.3s ease';
-            });
-        });
-    }
-});
+// Duplicate cursor code removed - using initCustomCursor() function instead
 
 // Performance optimization
 ScrollTrigger.config({
