@@ -5,11 +5,9 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 window.addEventListener('load', () => {
     console.log('Window loaded - initializing everything');
     
-    // Clear session storage if URL has resetgame parameter
-    if (window.location.search.includes('resetgame')) {
-        sessionStorage.removeItem('gameCompleted');
-        console.log('Session storage cleared');
-    }
+    // ALWAYS clear session storage for testing (remove this line later if you want)
+    sessionStorage.removeItem('gameCompleted');
+    console.log('Session storage cleared for fresh start');
     
     // Initialize game first
     setTimeout(() => {
