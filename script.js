@@ -1,8 +1,26 @@
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
+// Initialize game IMMEDIATELY when script loads (before DOMContentLoaded)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGameFirst);
+} else {
+    // DOM already loaded
+    initGameFirst();
+}
+
+function initGameFirst() {
+    console.log('Initializing game FIRST');
+    // Small delay to ensure DOM is fully ready
+    setTimeout(() => {
+        initTargetShootingGame();
+    }, 100);
+}
+
 // Target Shooting Game
 function initTargetShootingGame() {
+    console.log('Initializing target shooting game...');
+    
     const gameOverlay = document.getElementById('game-overlay');
     const gameArea = document.getElementById('game-area');
     const scoreElement = document.getElementById('score');
@@ -11,9 +29,17 @@ function initTargetShootingGame() {
     
     // Check if elements exist
     if (!gameOverlay || !gameArea || !scoreElement || !timerElement || !skipBtn) {
-        console.error('Game elements not found');
+        console.error('Game elements not found:', {
+            gameOverlay: !!gameOverlay,
+            gameArea: !!gameArea,
+            scoreElement: !!scoreElement,
+            timerElement: !!timerElement,
+            skipBtn: !!skipBtn
+        });
         return;
     }
+    
+    console.log('All game elements found');
     
     let score = 0;
     let timeLeft = 15;
@@ -24,12 +50,17 @@ function initTargetShootingGame() {
     
     // Check if user has played before (session storage)
     if (sessionStorage.getItem('gameCompleted')) {
+        console.log('Game already completed in this session, skipping...');
         endGame();
         return;
     }
     
-    // Show game overlay
+    console.log('Showing game overlay...');
+    
+    // Force show game overlay
     gameOverlay.style.display = 'flex';
+    gameOverlay.style.visibility = 'visible';
+    gameOverlay.style.opacity = '1';
     gameOverlay.classList.remove('hidden');
     
     // Hide custom cursor elements
@@ -40,6 +71,8 @@ function initTargetShootingGame() {
     if (customCursor) customCursor.style.display = 'none';
     if (cursorGlow) cursorGlow.style.display = 'none';
     cursorTrails.forEach(trail => trail.style.display = 'none');
+    
+    console.log('Game overlay should now be visible');
     
     // Start the game
     function startGame() {
@@ -182,10 +215,11 @@ function initTargetShootingGame() {
     startGame();
 }
 
-// Initialize game on page load
-document.addEventListener('DOMContentLoaded', () => {
-    initTargetShootingGame();
-});
+// For testing: Clear session storage if you add ?resetgame to URL
+if (window.location.search.includes('resetgame')) {
+    sessionStorage.removeItem('gameCompleted');
+    console.log('Session storage cleared');
+}
 
 // Theme Toggle Functionality
 function initThemeToggle() {
@@ -1016,7 +1050,7 @@ function initNavigation() {
         });
 
         // Close menu when clicking on nav links
-        navLinks.forEach(link => {
+    navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 hamburgerMenu.classList.remove('active');
                 navMenu.classList.remove('active');
