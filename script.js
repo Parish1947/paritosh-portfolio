@@ -1,6 +1,164 @@
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
+// Target Shooting Game
+function initTargetShootingGame() {
+    const gameOverlay = document.getElementById('game-overlay');
+    const gameArea = document.getElementById('game-area');
+    const scoreElement = document.getElementById('score');
+    const timerElement = document.getElementById('timer');
+    const skipBtn = document.getElementById('skip-game');
+    
+    let score = 0;
+    let timeLeft = 15;
+    let gameActive = true;
+    let targetsNeeded = 5;
+    let targetInterval;
+    let timerInterval;
+    
+    // Check if user has played before (session storage)
+    if (sessionStorage.getItem('gameCompleted')) {
+        endGame();
+        return;
+    }
+    
+    // Start the game
+    function startGame() {
+        spawnTarget();
+        targetInterval = setInterval(spawnTarget, 1500); // Spawn target every 1.5s
+        
+        // Start timer
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = `${timeLeft}s`;
+            
+            if (timeLeft <= 0) {
+                // Time's up - let them in anyway
+                winGame();
+            }
+        }, 1000);
+    }
+    
+    // Spawn a target at random position
+    function spawnTarget() {
+        if (!gameActive) return;
+        
+        const target = document.createElement('div');
+        target.className = 'target';
+        
+        // Random position within game area
+        const gameRect = gameArea.getBoundingClientRect();
+        const maxX = gameRect.width - 80; // 80px = target width + padding
+        const maxY = gameRect.height - 80;
+        
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+        
+        target.style.left = `${randomX}px`;
+        target.style.top = `${randomY}px`;
+        
+        // Click handler
+        target.addEventListener('click', (e) => {
+            hitTarget(target, e);
+        });
+        
+        gameArea.appendChild(target);
+        
+        // Remove target after 3 seconds if not hit
+        setTimeout(() => {
+            if (target.parentElement) {
+                target.remove();
+            }
+        }, 3000);
+    }
+    
+    // Hit target
+    function hitTarget(target, event) {
+        if (!gameActive) return;
+        
+        score++;
+        scoreElement.textContent = score;
+        
+        // Add hit class for animation
+        target.classList.add('hit');
+        
+        // Create hit effect
+        const hitEffect = document.createElement('div');
+        hitEffect.className = 'hit-effect';
+        hitEffect.style.left = `${event.clientX - gameArea.getBoundingClientRect().left - 50}px`;
+        hitEffect.style.top = `${event.clientY - gameArea.getBoundingClientRect().top - 50}px`;
+        gameArea.appendChild(hitEffect);
+        
+        // Remove hit effect after animation
+        setTimeout(() => hitEffect.remove(), 500);
+        
+        // Remove target
+        setTimeout(() => target.remove(), 300);
+        
+        // Check win condition
+        if (score >= targetsNeeded) {
+            winGame();
+        }
+    }
+    
+    // Win game
+    function winGame() {
+        gameActive = false;
+        clearInterval(targetInterval);
+        clearInterval(timerInterval);
+        
+        // Show success message
+        gameArea.innerHTML = `
+            <div style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                gap: 20px;
+            ">
+                <div style="font-size: 4rem;">🎯</div>
+                <div style="font-size: 2rem; color: #fafafa; font-weight: 700;">EXCELLENT SHOT!</div>
+                <div style="font-size: 1.2rem; color: #b8b8b8;">Score: ${score} | Time: ${15 - timeLeft}s</div>
+                <div style="font-size: 1rem; color: #808080;">Entering portfolio...</div>
+            </div>
+        `;
+        
+        // Mark as completed in session
+        sessionStorage.setItem('gameCompleted', 'true');
+        
+        // Fade out and enter portfolio
+        setTimeout(() => {
+            endGame();
+        }, 2000);
+    }
+    
+    // End game and show portfolio
+    function endGame() {
+        gameOverlay.classList.add('hidden');
+        setTimeout(() => {
+            gameOverlay.style.display = 'none';
+        }, 500);
+    }
+    
+    // Skip button
+    skipBtn.addEventListener('click', () => {
+        gameActive = false;
+        clearInterval(targetInterval);
+        clearInterval(timerInterval);
+        sessionStorage.setItem('gameCompleted', 'true');
+        endGame();
+    });
+    
+    // Start the game
+    startGame();
+}
+
+// Initialize game on page load
+document.addEventListener('DOMContentLoaded', () => {
+    initTargetShootingGame();
+});
+
 // Theme Toggle Functionality
 function initThemeToggle() {
     const themeToggle = document.getElementById('theme-toggle');
